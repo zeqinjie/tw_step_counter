@@ -2,17 +2,66 @@
 
 A new flutter plugin project.
 
-## Getting Started
+## introduce
+![](https://github.com/zeqinjie/tw_step_counter/blob/main/assets/1.png)
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Use
+```
+  /// 每次递增递减值
+  final double differValue;
+  /// 支持最小值
+  final double mixValue;
+  /// 支持最大值
+  final double maxValue;
+  /// 按钮宽度
+  final double? btnWidth;
+  /// 按钮高度
+  final double? btnHeight;
+  /// 值颜色
+  final Color? valueColor;
+  /// 值字体大小
+  final double? valueFontSize;
+  /// 单位
+  final String? unit;
+  /// 单位颜色
+  final Color? unitColor;
+  /// 单位字体大小
+  final double? unitFontSize;
+  /// 当前值
+  final double? currentValue;
+  /// 点击回调
+  final void Function(double value)? onTap;
+  /// 默认颜色
+  final Color? iconColor;
+  /// 禁止点击颜色
+  final Color? forbiddenIconColor;
+  /// 多少位小数位
+  final int decimalsCount;
+  /// 高亮颜色
+  final Color? highlightColor;
+  /// 默认背景色
+  final Color? defaultColor;
+  /// 边线颜色
+  final Color? borderLineColor;
+  /// 间隙
+  final EdgeInsetsGeometry? padding;
+  /// 值的组件间隙
+  final EdgeInsetsGeometry? valuePadding;
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```dart
+ TWStepCounter(
+              unit: '元/天',
+              currentValue: 100,
+              mixValue: 75,
+              maxValue: 250,
+              defaultColor: Colors.red,
+              highlightColor: Colors.yellow,
+              borderLineColor: Colors.orange,
+              valuePadding: EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+            )
+```
 
-The plugin project was generated without specifying the `--platforms` flag, no platforms are currently supported.
-To add platforms, run `flutter create -t plugin --platforms <platforms> .` under the same
-directory. You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.

@@ -4,7 +4,7 @@ library tw_step_counter_view;
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-17 23:04:06
+ * @LastEditTime: 2022-07-17 23:20:29
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -55,15 +55,19 @@ class TWStepCounter extends StatefulWidget {
   /// 多少位小数位
   final int decimalsCount;
 
+  /// 高亮颜色
   final Color? highlightColor;
 
+  /// 默认背景色
   final Color? defaultColor;
 
+  /// 边线颜色
   final Color? borderLineColor;
 
   /// 间隙
   final EdgeInsetsGeometry? padding;
-
+  
+  /// 值的组件间隙
   final EdgeInsetsGeometry? valuePadding;
 
   const TWStepCounter({
