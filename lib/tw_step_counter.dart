@@ -4,7 +4,7 @@ library tw_step_counter_view;
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-18 11:17:03
+ * @LastEditTime: 2022-07-18 11:46:45
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -252,11 +252,13 @@ class _TWStepCounterState extends State<TWStepCounter>
       vaule = currentValue + widget.differValue;
       if (vaule <= widget.maxValue) {
         currentValue = vaule;
+        _animation();
       }
     } else {
       vaule = currentValue - widget.differValue;
       if (vaule >= widget.mixValue) {
         currentValue = vaule;
+        _animation();
       }
     }
 
@@ -274,6 +276,9 @@ class _TWStepCounterState extends State<TWStepCounter>
     if (widget.onTap != null) {
       widget.onTap!(vaule);
     }
+  }
+
+  void _animation() {
     _controller.reset();
     _controller.forward();
     isFirst = false;

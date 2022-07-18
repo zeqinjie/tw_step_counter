@@ -1,9 +1,16 @@
+<!--
+ * @Author: zhengzeqin
+ * @Date: 2022-07-18 11:14:42
+ * @LastEditTime: 2022-07-18 11:48:36
+ * @Description: your project
+-->
 # tw_step_counter
 
-A new flutter plugin project.
+A Simple step caculator 
 
 ## introduce
-![](https://github.com/zeqinjie/tw_step_counter/blob/main/assets/1.png)
+
+![](https://github.com/zeqinjie/tw_step_counter/blob/main/assets/1.gif)
 
 ## Use
 ```
