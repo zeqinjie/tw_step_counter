@@ -1,19 +1,28 @@
-<!--
- * @Author: zhengzeqin
- * @Date: 2022-07-18 11:14:42
- * @LastEditTime: 2022-07-18 11:48:36
- * @Description: your project
--->
 # tw_step_counter
 
-A Simple step caculator 
+This is a simple step caculator widget.
 
 ## introduce
 
 ![](https://github.com/zeqinjie/tw_step_counter/blob/main/assets/1.gif)
 
-## Use
+
+## Installing
+
+Add tw_step_counter to your pubspec.yaml file:
+```yaml
+dependencies:
+  tw_step_counter: latest_version
 ```
+
+import tw_step_counter in files that it will be used:
+```dart
+import 'package:tw_step_counter/tw_step_counter.dart';
+```
+
+## Getting Started
+some support property 
+```dart
   /// 每次递增递减值
   final double differValue;
   /// 支持最小值
@@ -55,6 +64,7 @@ A Simple step caculator
   /// 值的组件间隙
   final EdgeInsetsGeometry? valuePadding;
 ```
+example
 
 ```dart
  TWStepCounter(

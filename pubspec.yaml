@@ -1,7 +1,7 @@
 name: tw_step_counter
 description: A new flutter plugin project.
 version: 0.1.0
-homepage:
+homepage: https://github.com/zeqinjie/tw_step_counter
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
