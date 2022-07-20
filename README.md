@@ -10,6 +10,7 @@ This is a simple step caculator widget.
 ## Installing
 
 Add tw_step_counter to your pubspec.yaml file:
+
 ```yaml
 dependencies:
   tw_step_counter: latest_version
