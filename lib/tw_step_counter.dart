@@ -4,7 +4,7 @@ library tw_step_counter_view;
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-18 11:46:45
+ * @LastEditTime: 2022-07-21 17:21:39
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -166,22 +166,24 @@ class _TWStepCounterState extends State<TWStepCounter>
     GestureTapCallback? onTap,
     bool forbidden = false,
   }) {
-    return Ink(
-      width: widget.btnWidth ?? 64,
-      height: widget.btnHeight ?? 30,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2.5),
-        color: widget.defaultColor ?? const Color(0XFFE6E6E6),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        highlightColor: widget.highlightColor ?? const Color(0XFFE6E6E6),
-        child: Icon(
-          isAdd ? Icons.add : Icons.remove,
-          size: 10,
-          color: forbidden
-              ? (widget.iconColor ?? const Color(0XFFCCCCCC))
-              : (widget.forbiddenIconColor ?? const Color(0XFF4A4A4A)),
+    return Material(
+      child: Ink(
+        width: widget.btnWidth ?? 64,
+        height: widget.btnHeight ?? 30,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.5),
+          color: widget.defaultColor ?? const Color(0XFFE6E6E6),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          highlightColor: widget.highlightColor ?? const Color(0XFFE6E6E6),
+          child: Icon(
+            isAdd ? Icons.add : Icons.remove,
+            size: 10,
+            color: forbidden
+                ? (widget.iconColor ?? const Color(0XFFCCCCCC))
+                : (widget.forbiddenIconColor ?? const Color(0XFF4A4A4A)),
+          ),
         ),
       ),
     );
