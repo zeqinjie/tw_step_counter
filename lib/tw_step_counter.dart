@@ -1,11 +1,39 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-28 19:17:54
+ * @LastEditTime: 2022-07-28 22:43:48
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tw_step_counter/tw_colors.dart';
+
+class TWStepCounterController {
+  _TWStepCounterState? _state;
+  BuildContext? _context;
+
+  /// 获取焦点
+  void getFocus() {
+    if (_context != null) {
+      _state?.getFocus(_context!);
+    }
+  }
+
+  /// 失去焦点
+  void unFocus() {
+    _state?.unFocus();
+  }
+
+  /// 隐藏键盘而不丢失文本字段焦点：
+  void hideKeyBoard() {
+    _state?.hideKeyBoard();
+  }
+
+  /// 最好的值是输入还是点击按钮修改
+  bool get isInputModify {
+    return _state?.isInputModify ?? false;
+  }
+}
 
 class TWStepCounter extends StatefulWidget {
   /// 每次递增递减值
@@ -71,6 +99,10 @@ class TWStepCounter extends StatefulWidget {
   /// 值的组件间隙
   final EdgeInsetsGeometry? valuePadding;
 
+  final TWStepCounterController? controller;
+
+  final bool? decimal;
+
   const TWStepCounter({
     Key? key,
     this.unit,
@@ -94,6 +126,8 @@ class TWStepCounter extends StatefulWidget {
     this.defaultColor,
     this.highlightColor,
     this.borderLineColor,
+    this.controller,
+    this.decimal = false,
   }) : super(key: key);
 
   @override
@@ -110,36 +144,52 @@ class _TWStepCounterState extends State<TWStepCounter>
   /// 禁止加
   bool forbiddenReduce = false;
 
-  late AnimationController _controller;
-  final textController = TextEditingController();
+  late AnimationController animationController;
+  late TextEditingController textController;
+
+  /// 最好值是输入还是点击修改的
+  bool lastIsInput = false;
 
   FocusNode focusNode = FocusNode();
 
   late final Animation _scaleAnimation =
-      Tween(begin: 1.2, end: 1.0).animate(_controller);
+      Tween(begin: 1.2, end: 1.0).animate(animationController);
   bool isFirst = true;
   @override
   Widget build(BuildContext context) {
+    widget.controller?._context = context;
     return _buildBody();
   }
 
   @override
   void initState() {
     super.initState();
+    widget.controller?._state = this;
     currentValue = widget.currentValue ?? 0;
     forbiddenAdd = currentValue >= widget.maxValue;
     forbiddenReduce = currentValue <= widget.mixValue;
-    _controller = AnimationController(
+    animationController = AnimationController(
       vsync: this, // 垂直同步
       duration: const Duration(milliseconds: 300),
     );
+    textController = TextEditingController();
     textController.value = TextEditingValue(
         text: currentValue.toStringAsFixed(widget.decimalsCount));
+    focusNode.addListener(
+      () {
+        if (!focusNode.hasFocus) {
+          _handerValue(currentValue);
+          _updateValue();
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    animationController.dispose();
+    textController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -199,7 +249,7 @@ class _TWStepCounterState extends State<TWStepCounter>
 
   Widget _buildContent() {
     return AnimatedBuilder(
-      animation: _controller,
+      animation: animationController,
       builder: (BuildContext context, Widget? child) {
         return Container(
           decoration: BoxDecoration(
@@ -238,10 +288,12 @@ class _TWStepCounterState extends State<TWStepCounter>
   Widget _buildText() {
     return IntrinsicWidth(
       child: TextField(
-        keyboardType: TextInputType.number,
+        keyboardType:
+            TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
         textInputAction: TextInputAction.done,
         maxLines: 1,
         controller: textController,
+        focusNode: focusNode,
         style: TextStyle(
           fontSize: widget.valueFontSize ?? 20,
           fontWeight: FontWeight.bold,
@@ -252,16 +304,47 @@ class _TWStepCounterState extends State<TWStepCounter>
           contentPadding: EdgeInsets.zero,
         ),
         onChanged: (value) {
-          final _value = double.parse(value);
+          lastIsInput = true;
+          final double _value = _fetchValue(value);
           currentValue = _value;
-          _animation();
+          _updateValue(isInput: true);
+          if (widget.inputTap != null) {
+            widget.inputTap!(currentValue);
+          }
         },
-        onSubmitted: ((value) => print('onSubmitted ===> $value')),
       ),
     );
   }
 
-  /// Priavte Method **/
+  /* Public Method */
+  //获取焦点
+  void getFocus(BuildContext context) {
+    FocusScope.of(context).requestFocus(focusNode);
+  }
+
+  //失去焦点
+  void unFocus() {
+    focusNode.unfocus();
+  }
+
+  //隐藏键盘而不丢失文本字段焦点：
+  void hideKeyBoard() {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
+
+  bool get isInputModify {
+    return lastIsInput;
+  }
+
+  /* Priavte Method */
+  double _fetchValue(String txt) {
+    try {
+      return double.parse(txt);
+    } catch (e) {
+      return 0;
+    }
+  }
+
   /// 相加
   void _add() {
     setState(() {
@@ -278,19 +361,23 @@ class _TWStepCounterState extends State<TWStepCounter>
 
   void _caculator({bool isAdd = true}) {
     var vaule = 0.0;
+    lastIsInput = false;
     if (isAdd) {
       vaule = currentValue + widget.differValue;
       if (vaule <= widget.maxValue) {
         currentValue = vaule;
-        _animation();
+      } else {
+        currentValue = widget.maxValue;
       }
     } else {
       vaule = currentValue - widget.differValue;
       if (vaule >= widget.mixValue) {
         currentValue = vaule;
-        _animation();
+      } else {
+        currentValue = widget.mixValue;
       }
     }
+    _updateValue(isAdd: isAdd);
 
     if (vaule < widget.maxValue) {
       forbiddenAdd = false;
@@ -308,11 +395,40 @@ class _TWStepCounterState extends State<TWStepCounter>
     }
   }
 
-  void _animation() {
-    _controller.reset();
-    _controller.forward();
+  void _handerValue(double vaule) {
+    if (vaule > widget.maxValue) {
+      currentValue = widget.maxValue;
+    }
+    if (vaule < widget.mixValue) {
+      currentValue = widget.mixValue;
+    }
+  }
+
+  /// 更新值
+  void _updateValue({
+    bool isAdd = true,
+    bool isInput = false,
+  }) {
     isFirst = false;
+    if (!isInput) {
+      if ((isAdd & !forbiddenAdd) || (!isAdd & !forbiddenReduce)) {
+        animationController.reset();
+        animationController.forward();
+      }
+    } else {
+      animationController.reset();
+      animationController.forward();
+    }
+
+    final txt = currentValue.toStringAsFixed(widget.decimalsCount);
     textController.value = TextEditingValue(
-        text: currentValue.toStringAsFixed(widget.decimalsCount));
+      text: txt,
+      selection: TextSelection.fromPosition(
+        TextPosition(
+          affinity: TextAffinity.downstream,
+          offset: txt.length,
+        ),
+      ),
+    );
   }
 }

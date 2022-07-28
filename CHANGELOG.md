@@ -1,9 +1,13 @@
 <!--
  * @Author: zhengzeqin
  * @Date: 2022-07-18 11:14:42
- * @LastEditTime: 2022-07-24 21:02:27
+ * @LastEditTime: 2022-07-28 22:47:14
  * @Description: your project
 -->
+## 0.1.2
+- support focus controller
+- support input text and range limit
+todo: fix the decimal bug
 
 ## 0.1.1
 - fix bug
