@@ -1,13 +1,11 @@
-library tw_step_counter_view;
-
-/// A Calculator.
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-21 17:21:39
+ * @LastEditTime: 2022-07-28 19:17:54
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
+import 'package:tw_step_counter/tw_colors.dart';
 
 class TWStepCounter extends StatefulWidget {
   /// 每次递增递减值
@@ -45,6 +43,9 @@ class TWStepCounter extends StatefulWidget {
 
   /// 点击回调
   final void Function(double value)? onTap;
+
+  /// 输入的回调
+  final void Function(double value)? inputTap;
 
   /// 默认颜色
   final Color? iconColor;
@@ -86,6 +87,7 @@ class TWStepCounter extends StatefulWidget {
     this.unitFontSize,
     this.padding,
     this.onTap,
+    this.inputTap,
     this.currentValue,
     this.decimalsCount = 0,
     this.valuePadding,
@@ -109,6 +111,10 @@ class _TWStepCounterState extends State<TWStepCounter>
   bool forbiddenReduce = false;
 
   late AnimationController _controller;
+  final textController = TextEditingController();
+
+  FocusNode focusNode = FocusNode();
+
   late final Animation _scaleAnimation =
       Tween(begin: 1.2, end: 1.0).animate(_controller);
   bool isFirst = true;
@@ -127,6 +133,8 @@ class _TWStepCounterState extends State<TWStepCounter>
       vsync: this, // 垂直同步
       duration: const Duration(milliseconds: 300),
     );
+    textController.value = TextEditingValue(
+        text: currentValue.toStringAsFixed(widget.decimalsCount));
   }
 
   @override
@@ -172,17 +180,17 @@ class _TWStepCounterState extends State<TWStepCounter>
         height: widget.btnHeight ?? 30,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.5),
-          color: widget.defaultColor ?? const Color(0XFFE6E6E6),
+          color: widget.defaultColor ?? TWColors.twF5F5F5,
         ),
         child: InkWell(
           onTap: onTap,
-          highlightColor: widget.highlightColor ?? const Color(0XFFE6E6E6),
+          highlightColor: widget.highlightColor ?? TWColors.twE6E6E6,
           child: Icon(
             isAdd ? Icons.add : Icons.remove,
             size: 10,
             color: forbidden
-                ? (widget.iconColor ?? const Color(0XFFCCCCCC))
-                : (widget.forbiddenIconColor ?? const Color(0XFF4A4A4A)),
+                ? (widget.iconColor ?? TWColors.twCCCCCC)
+                : (widget.forbiddenIconColor ?? TWColors.tw4A4A4A),
           ),
         ),
       ),
@@ -198,23 +206,17 @@ class _TWStepCounterState extends State<TWStepCounter>
             border: Border(
               bottom: BorderSide(
                 width: 1,
-                color: widget.borderLineColor ?? const Color(0XFFE6E6E6),
+                color: widget.borderLineColor ?? TWColors.twE6E6E6,
               ),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Transform.scale(
                 scale: isFirst ? 1.0 : _scaleAnimation.value,
-                child: Text(
-                  currentValue.toStringAsFixed(widget.decimalsCount),
-                  style: TextStyle(
-                    fontSize: widget.valueFontSize ?? 20,
-                    fontWeight: FontWeight.bold,
-                    color: widget.valueColor ?? const Color(0XFF333333),
-                  ),
-                ),
+                child: _buildText(),
               ),
               const SizedBox(
                 width: 2,
@@ -223,13 +225,39 @@ class _TWStepCounterState extends State<TWStepCounter>
                 ' ${widget.unit}',
                 style: TextStyle(
                   fontSize: widget.unitFontSize ?? 16,
-                  color: widget.unitColor ?? const Color(0XFF999999),
+                  color: widget.unitColor ?? TWColors.tw999999,
                 ),
               )
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildText() {
+    return IntrinsicWidth(
+      child: TextField(
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        maxLines: 1,
+        controller: textController,
+        style: TextStyle(
+          fontSize: widget.valueFontSize ?? 20,
+          fontWeight: FontWeight.bold,
+          color: widget.valueColor ?? TWColors.tw333333,
+        ),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.zero,
+        ),
+        onChanged: (value) {
+          final _value = double.parse(value);
+          currentValue = _value;
+          _animation();
+        },
+        onSubmitted: ((value) => print('onSubmitted ===> $value')),
+      ),
     );
   }
 
@@ -284,5 +312,7 @@ class _TWStepCounterState extends State<TWStepCounter>
     _controller.reset();
     _controller.forward();
     isFirst = false;
+    textController.value = TextEditingValue(
+        text: currentValue.toStringAsFixed(widget.decimalsCount));
   }
 }

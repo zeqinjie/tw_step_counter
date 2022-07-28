@@ -18,6 +18,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # 键盘事件管理，可以点击空白隐藏键盘
+  flutter_keyboard_visibility: 5.2.0
+
   tw_step_counter:
     # When depending on this package from a real application you should use:
     #   tw_step_counter: ^x.y.z
