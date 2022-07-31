@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-28 22:43:48
+ * @LastEditTime: 2022-07-31 21:49:45
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -178,8 +178,10 @@ class _TWStepCounterState extends State<TWStepCounter>
     focusNode.addListener(
       () {
         if (!focusNode.hasFocus) {
-          _handerValue(currentValue);
-          _updateValue();
+          final res = _handerValue(currentValue);
+          if (res) {
+            _updateValue();
+          }
         }
       },
     );
@@ -306,10 +308,12 @@ class _TWStepCounterState extends State<TWStepCounter>
         onChanged: (value) {
           lastIsInput = true;
           final double _value = _fetchValue(value);
-          currentValue = _value;
-          _updateValue(isInput: true);
-          if (widget.inputTap != null) {
-            widget.inputTap!(currentValue);
+          if (currentValue != _value) {
+            currentValue = _value;
+            _updateValue(isInput: true);
+            if (widget.inputTap != null) {
+              widget.inputTap!(currentValue);
+            }
           }
         },
       ),
@@ -395,13 +399,17 @@ class _TWStepCounterState extends State<TWStepCounter>
     }
   }
 
-  void _handerValue(double vaule) {
+  bool _handerValue(double vaule) {
+    var isModify = false;
     if (vaule > widget.maxValue) {
       currentValue = widget.maxValue;
+      isModify = true;
     }
     if (vaule < widget.mixValue) {
       currentValue = widget.mixValue;
+      isModify = true;
     }
+    return isModify;
   }
 
   /// 更新值

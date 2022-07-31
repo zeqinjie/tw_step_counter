@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 22:49:40
- * @LastEditTime: 2022-07-28 22:45:38
+ * @LastEditTime: 2022-07-31 21:44:42
  * @Description: your project
  */
 import 'package:flutter/material.dart';
@@ -69,8 +69,8 @@ class _MyAppState extends State<MyApp> {
                     defaultColor: TWColors.tw999999,
                     highlightColor: Colors.yellow,
                     borderLineColor: Colors.orange,
-                    // decimal: true,
-                    // decimalsCount: 2,
+                    decimal: true,
+                    decimalsCount: 2,
                     valuePadding: const EdgeInsets.only(
                       left: 10,
                       right: 10,

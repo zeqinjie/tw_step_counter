@@ -1,13 +1,17 @@
 <!--
  * @Author: zhengzeqin
  * @Date: 2022-07-18 11:14:42
- * @LastEditTime: 2022-07-28 22:47:14
+ * @LastEditTime: 2022-07-31 21:51:01
  * @Description: your project
 -->
+
+## 0.1.3
+- fix input animation bug
+- fix the input decimal bug
 ## 0.1.2
 - support focus controller
 - support input text and range limit
-todo: fix the decimal bug
+- todo: fix the input decimal bug
 
 ## 0.1.1
 - fix bug
