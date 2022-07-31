@@ -24,62 +24,113 @@ import 'package:tw_step_counter/tw_step_counter.dart';
 ## Getting Started
 some support property 
 ```dart
-  /// 每次递增递减值
+ /// 每次按钮点击递增递减值
   final double differValue;
+
+  /// 每次输入倍数，失去焦点时触发
+  final double? inputMultipleValue;
+
   /// 支持最小值
   final double mixValue;
+
   /// 支持最大值
   final double maxValue;
+
   /// 按钮宽度
   final double? btnWidth;
-  /// 按钮高度
-  final double? btnHeight;
+
+  /// 高度
+  final double? height;
+
   /// 值颜色
   final Color? valueColor;
+
   /// 值字体大小
   final double? valueFontSize;
+
   /// 单位
   final String? unit;
+
   /// 单位颜色
   final Color? unitColor;
+
   /// 单位字体大小
   final double? unitFontSize;
+
   /// 当前值
   final double? currentValue;
+
   /// 点击回调
   final void Function(double value)? onTap;
+
+  /// 输入的回调
+  final void Function(double value)? inputTap;
+
   /// 默认颜色
   final Color? iconColor;
+
   /// 禁止点击颜色
   final Color? forbiddenIconColor;
-  /// 多少位小数位
+
+  /// 保留多少位小数位
   final int decimalsCount;
+
   /// 高亮颜色
   final Color? highlightColor;
+
   /// 默认背景色
   final Color? defaultColor;
+
   /// 边线颜色
   final Color? borderLineColor;
+
   /// 间隙
   final EdgeInsetsGeometry? padding;
+
   /// 值的组件间隙
   final EdgeInsetsGeometry? valuePadding;
+
+  /// 控制器
+  final TWStepCounterController? controller;
+
+  /// 是否支持小数点
+  final bool? decimal;
+
+  /// 是否自动限制值范围，默认会
+  final bool isUpdateInLimitValue;
+
+  /// 是否支持动画，默认会
+  final bool isSupportAnimation;
+  
 ```
 example
 
 ```dart
- TWStepCounter(
-              unit: '元/天',
-              currentValue: 100,
-              mixValue: 75,
-              maxValue: 250,
-              defaultColor: Colors.red,
-              highlightColor: Colors.yellow,
-              borderLineColor: Colors.orange,
-              valuePadding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-            )
+TWStepCounter(
+      unit: '元/天',
+      currentValue: 130,
+      mixValue: 75,
+      maxValue: 250,
+      onTap: (value) {
+        print('点击回调===>$value');
+      },
+      inputTap: (value) {
+        print('输入回调===>$value');
+      },
+      controller: controller,
+      defaultColor: TWColors.tw999999,
+      highlightColor: Colors.yellow,
+      borderLineColor: Colors.red,
+      inputMultipleValue: 5,
+      // height: 70,
+      // isUpdateInLimitValue: false,
+      // isSupportAnimation: false,
+      // decimal: true,
+      // decimalsCount: 2,
+      valuePadding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+      ),
+    )
 ```
 
