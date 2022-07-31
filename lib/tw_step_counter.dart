@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-31 21:49:45
+ * @LastEditTime: 2022-07-31 22:52:37
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -36,8 +36,11 @@ class TWStepCounterController {
 }
 
 class TWStepCounter extends StatefulWidget {
-  /// 每次递增递减值
+  /// 每次按钮点击递增递减值
   final double differValue;
+
+  /// 每次输入倍数，失去焦点时触发
+  final double? inputMultipleValue;
 
   /// 支持最小值
   final double mixValue;
@@ -48,8 +51,8 @@ class TWStepCounter extends StatefulWidget {
   /// 按钮宽度
   final double? btnWidth;
 
-  /// 按钮高度
-  final double? btnHeight;
+  /// 高度
+  final double? height;
 
   /// 值颜色
   final Color? valueColor;
@@ -81,7 +84,7 @@ class TWStepCounter extends StatefulWidget {
   /// 禁止点击颜色
   final Color? forbiddenIconColor;
 
-  /// 多少位小数位
+  /// 保留多少位小数位
   final int decimalsCount;
 
   /// 高亮颜色
@@ -99,9 +102,17 @@ class TWStepCounter extends StatefulWidget {
   /// 值的组件间隙
   final EdgeInsetsGeometry? valuePadding;
 
+  /// 控制器
   final TWStepCounterController? controller;
 
+  /// 是否支持小数点
   final bool? decimal;
+
+  /// 是否自动限制值范围，默认会
+  final bool isUpdateInLimitValue;
+
+  /// 是否支持动画，默认会
+  final bool isSupportAnimation;
 
   const TWStepCounter({
     Key? key,
@@ -109,12 +120,13 @@ class TWStepCounter extends StatefulWidget {
     this.valueColor,
     this.valueFontSize,
     this.differValue = 5,
+    this.inputMultipleValue,
     this.mixValue = 0,
     this.maxValue = 9999999999,
     this.forbiddenIconColor,
     this.iconColor,
     this.btnWidth,
-    this.btnHeight,
+    this.height,
     this.unitColor,
     this.unitFontSize,
     this.padding,
@@ -126,8 +138,10 @@ class TWStepCounter extends StatefulWidget {
     this.defaultColor,
     this.highlightColor,
     this.borderLineColor,
+    this.isUpdateInLimitValue = true,
     this.controller,
     this.decimal = false,
+    this.isSupportAnimation = true,
   }) : super(key: key);
 
   @override
@@ -178,7 +192,7 @@ class _TWStepCounterState extends State<TWStepCounter>
     focusNode.addListener(
       () {
         if (!focusNode.hasFocus) {
-          final res = _handerValue(currentValue);
+          final res = _handerInputValue(currentValue);
           if (res) {
             _updateValue();
           }
@@ -229,7 +243,7 @@ class _TWStepCounterState extends State<TWStepCounter>
     return Material(
       child: Ink(
         width: widget.btnWidth ?? 64,
-        height: widget.btnHeight ?? 30,
+        height: widget.height ?? 30,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.5),
           color: widget.defaultColor ?? TWColors.twF5F5F5,
@@ -250,72 +264,103 @@ class _TWStepCounterState extends State<TWStepCounter>
   }
 
   Widget _buildContent() {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (BuildContext context, Widget? child) {
-        return Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                width: 1,
-                color: widget.borderLineColor ?? TWColors.twE6E6E6,
+    if (widget.isSupportAnimation) {
+      return AnimatedBuilder(
+        animation: animationController,
+        builder: (BuildContext context, Widget? child) {
+          return _buildValueView(isFirst ? 1.0 : _scaleAnimation.value);
+        },
+      );
+    }
+    return _buildValueView(1);
+  }
+
+  Container _buildValueView(double scale) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: widget.borderLineColor ?? TWColors.twE6E6E6,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Transform.scale(
+            scale: scale,
+            child: _buildText(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 2),
+            child: Text(
+              ' ${widget.unit}',
+              style: TextStyle(
+                fontSize: widget.unitFontSize ?? 16,
+                color: widget.unitColor ?? TWColors.tw999999,
               ),
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Transform.scale(
-                scale: isFirst ? 1.0 : _scaleAnimation.value,
-                child: _buildText(),
-              ),
-              const SizedBox(
-                width: 2,
-              ),
-              Text(
-                ' ${widget.unit}',
-                style: TextStyle(
-                  fontSize: widget.unitFontSize ?? 16,
-                  color: widget.unitColor ?? TWColors.tw999999,
-                ),
-              )
-            ],
-          ),
-        );
-      },
+          )
+        ],
+      ),
     );
   }
 
   Widget _buildText() {
     return IntrinsicWidth(
-      child: TextField(
-        keyboardType:
-            TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
-        textInputAction: TextInputAction.done,
-        maxLines: 1,
-        controller: textController,
-        focusNode: focusNode,
-        style: TextStyle(
-          fontSize: widget.valueFontSize ?? 20,
-          fontWeight: FontWeight.bold,
-          color: widget.valueColor ?? TWColors.tw333333,
-        ),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.zero,
-        ),
-        onChanged: (value) {
-          lastIsInput = true;
-          final double _value = _fetchValue(value);
-          if (currentValue != _value) {
-            currentValue = _value;
-            _updateValue(isInput: true);
-            if (widget.inputTap != null) {
-              widget.inputTap!(currentValue);
+      child: Container(
+        alignment: Alignment.center,
+        height: widget.height ?? 30,
+        child: TextField(
+          keyboardType:
+              TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
+          textInputAction: TextInputAction.done,
+          maxLines: 1,
+          controller: textController,
+          focusNode: focusNode,
+          autocorrect: false,
+          style: TextStyle(
+            fontSize: widget.valueFontSize ?? 20,
+            fontWeight: FontWeight.bold,
+            color: widget.valueColor ?? TWColors.tw333333,
+          ),
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                ),
+              ),
+              contentPadding: EdgeInsets.only(top: 0, bottom: 0)),
+          onChanged: (value) {
+            lastIsInput = true;
+            final double _value = _fetchValue(value);
+            if (currentValue != _value) {
+              currentValue = _value;
+              _updateValue(isInput: true);
+              if (widget.inputTap != null) {
+                widget.inputTap!(currentValue);
+              }
             }
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -368,17 +413,25 @@ class _TWStepCounterState extends State<TWStepCounter>
     lastIsInput = false;
     if (isAdd) {
       vaule = currentValue + widget.differValue;
-      if (vaule <= widget.maxValue) {
-        currentValue = vaule;
+      if (widget.isUpdateInLimitValue) {
+        if (vaule <= widget.maxValue) {
+          currentValue = vaule;
+        } else {
+          currentValue = widget.maxValue;
+        }
       } else {
-        currentValue = widget.maxValue;
+        currentValue = vaule;
       }
     } else {
       vaule = currentValue - widget.differValue;
-      if (vaule >= widget.mixValue) {
-        currentValue = vaule;
+      if (widget.isUpdateInLimitValue) {
+        if (vaule >= widget.mixValue) {
+          currentValue = vaule;
+        } else {
+          currentValue = widget.mixValue;
+        }
       } else {
-        currentValue = widget.mixValue;
+        currentValue = vaule;
       }
     }
     _updateValue(isAdd: isAdd);
@@ -399,15 +452,43 @@ class _TWStepCounterState extends State<TWStepCounter>
     }
   }
 
-  bool _handerValue(double vaule) {
+  /// 失去焦点时候处理输入值
+  bool _handerInputValue(double vaule) {
     var isModify = false;
-    if (vaule > widget.maxValue) {
-      currentValue = widget.maxValue;
-      isModify = true;
+    if (widget.isUpdateInLimitValue) {
+      if (vaule > widget.maxValue) {
+        currentValue = widget.maxValue;
+        isModify = true;
+      }
+      if (vaule < widget.mixValue) {
+        currentValue = widget.mixValue;
+        isModify = true;
+      }
     }
-    if (vaule < widget.mixValue) {
-      currentValue = widget.mixValue;
-      isModify = true;
+
+    /// 限制输入倍数
+    if (widget.inputMultipleValue != null) {
+      if (currentValue % widget.inputMultipleValue! != 0) {
+        for (var i = currentValue; i <= widget.maxValue; i++) {
+          if (i % widget.inputMultipleValue! == 0) {
+            if (currentValue != i) {
+              currentValue = i;
+              isModify = true;
+              return isModify;
+            }
+          }
+        }
+
+        for (var i = currentValue; i >= widget.mixValue; i--) {
+          if (i % widget.inputMultipleValue! == 0) {
+            if (currentValue != i) {
+              currentValue = i;
+              isModify = true;
+              return isModify;
+            }
+          }
+        }
+      }
     }
     return isModify;
   }
@@ -418,16 +499,17 @@ class _TWStepCounterState extends State<TWStepCounter>
     bool isInput = false,
   }) {
     isFirst = false;
-    if (!isInput) {
-      if ((isAdd & !forbiddenAdd) || (!isAdd & !forbiddenReduce)) {
+    if (widget.isSupportAnimation) {
+      if (!isInput) {
+        if ((isAdd & !forbiddenAdd) || (!isAdd & !forbiddenReduce)) {
+          animationController.reset();
+          animationController.forward();
+        }
+      } else {
         animationController.reset();
         animationController.forward();
       }
-    } else {
-      animationController.reset();
-      animationController.forward();
     }
-
     final txt = currentValue.toStringAsFixed(widget.decimalsCount);
     textController.value = TextEditingValue(
       text: txt,

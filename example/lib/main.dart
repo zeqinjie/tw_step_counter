@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 22:49:40
- * @LastEditTime: 2022-07-31 21:44:42
+ * @LastEditTime: 2022-07-31 22:49:31
  * @Description: your project
  */
 import 'package:flutter/material.dart';
@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
                   },
                 ),
                 SizedBox(
-                  width: 323,
+                  width: 300,
                   child: TWStepCounter(
                     unit: '元/天',
                     currentValue: 130,
@@ -68,9 +68,13 @@ class _MyAppState extends State<MyApp> {
                     controller: controller,
                     defaultColor: TWColors.tw999999,
                     highlightColor: Colors.yellow,
-                    borderLineColor: Colors.orange,
-                    decimal: true,
-                    decimalsCount: 2,
+                    borderLineColor: Colors.red,
+                    inputMultipleValue: 5,
+                    // height: 70,
+                    // isUpdateInLimitValue: false,
+                    // isSupportAnimation: false,
+                    // decimal: true,
+                    // decimalsCount: 2,
                     valuePadding: const EdgeInsets.only(
                       left: 10,
                       right: 10,
