@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-01 11:44:39
+ * @LastEditTime: 2022-08-01 13:59:29
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -119,6 +119,9 @@ class TWStepCounter extends StatefulWidget {
   /// 是否支持动画，默认会
   final bool isSupportAnimation;
 
+  /// 限制输入的长度
+  final int? limitLength;
+
   const TWStepCounter({
     Key? key,
     this.unit,
@@ -147,6 +150,7 @@ class TWStepCounter extends StatefulWidget {
     this.controller,
     this.decimal = false,
     this.isSupportAnimation = true,
+    this.limitLength,
   }) : super(key: key);
 
   @override
@@ -298,9 +302,11 @@ class _TWStepCounterState extends State<TWStepCounter>
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Transform.scale(
-            scale: scale,
-            child: _buildText(),
+          Flexible(
+            child: Transform.scale(
+              scale: scale,
+              child: _buildText(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 2),
@@ -326,6 +332,9 @@ class _TWStepCounterState extends State<TWStepCounter>
           keyboardType:
               TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
           textInputAction: TextInputAction.done,
+          inputFormatters: widget.limitLength == null ? null : <TextInputFormatter>[
+            LengthLimitingTextInputFormatter(widget.limitLength!) //限制长度
+          ],
           maxLines: 1,
           controller: textController,
           focusNode: focusNode,

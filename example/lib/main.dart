@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 22:49:40
- * @LastEditTime: 2022-08-01 11:31:43
+ * @LastEditTime: 2022-08-01 14:25:06
  * @Description: your project
  */
 import 'package:flutter/material.dart';
@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                     highlightColor: Colors.yellow,
                     borderLineColor: Colors.red,
                     inputMultipleValue: 5,
+                    // limitLength: 8,
                     // height: 70,
                     // isUpdateInLimitValue: false,
                     // isSupportAnimation: false,

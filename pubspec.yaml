@@ -1,6 +1,6 @@
 name: tw_step_counter
 description: This is a simple step caculator widget.
-version: 0.1.4
+version: 0.1.5
 homepage: https://github.com/zeqinjie/tw_step_counter
 
 environment:

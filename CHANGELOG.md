@@ -1,10 +1,12 @@
 <!--
  * @Author: zhengzeqin
  * @Date: 2022-07-18 11:14:42
- * @LastEditTime: 2022-07-31 22:55:28
+ * @LastEditTime: 2022-08-01 14:33:26
  * @Description: your project
 -->
 
+## 0.1.5
+- support limit length
 ## 0.1.4
 - support input multiple value
 

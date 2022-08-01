@@ -101,6 +101,9 @@ some support property
 
   /// 是否支持动画，默认会
   final bool isSupportAnimation;
+
+    /// 限制输入的长度
+  final int? limitLength;
   
 ```
 example
