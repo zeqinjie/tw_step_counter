@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-07-31 22:52:37
+ * @LastEditTime: 2022-08-01 09:27:43
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -32,6 +32,11 @@ class TWStepCounterController {
   /// 最好的值是输入还是点击按钮修改
   bool get isInputModify {
     return _state?.isInputModify ?? false;
+  }
+
+  /// 手动更新值
+  void modifyValue(double value) {
+    _state?._modifyValue(value);
   }
 }
 
@@ -491,6 +496,13 @@ class _TWStepCounterState extends State<TWStepCounter>
       }
     }
     return isModify;
+  }
+
+  /// 手动更新值
+  void _modifyValue(double value) {
+    setState(() {
+      currentValue = value;
+    });
   }
 
   /// 更新值
