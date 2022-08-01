@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-01 09:27:43
+ * @LastEditTime: 2022-08-01 11:44:39
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -199,7 +199,10 @@ class _TWStepCounterState extends State<TWStepCounter>
         if (!focusNode.hasFocus) {
           final res = _handerInputValue(currentValue);
           if (res) {
-            _updateValue();
+            _updateValue(isInput: true);
+            if (widget.inputTap != null) {
+              widget.inputTap!(currentValue);
+            }
           }
         }
       },
