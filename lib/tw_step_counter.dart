@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-01 13:59:29
+ * @LastEditTime: 2022-08-02 14:10:01
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -332,9 +332,11 @@ class _TWStepCounterState extends State<TWStepCounter>
           keyboardType:
               TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
           textInputAction: TextInputAction.done,
-          inputFormatters: widget.limitLength == null ? null : <TextInputFormatter>[
-            LengthLimitingTextInputFormatter(widget.limitLength!) //限制长度
-          ],
+          inputFormatters: widget.limitLength == null
+              ? null
+              : <TextInputFormatter>[
+                  LengthLimitingTextInputFormatter(widget.limitLength!) //限制长度
+                ],
           maxLines: 1,
           controller: textController,
           focusNode: focusNode,
@@ -514,6 +516,7 @@ class _TWStepCounterState extends State<TWStepCounter>
   void _modifyValue(double value) {
     setState(() {
       currentValue = value;
+      _updateTextFieldValue();
     });
   }
 
@@ -534,6 +537,10 @@ class _TWStepCounterState extends State<TWStepCounter>
         animationController.forward();
       }
     }
+    _updateTextFieldValue();
+  }
+
+  void _updateTextFieldValue() {
     final txt = currentValue.toStringAsFixed(widget.decimalsCount);
     textController.value = TextEditingValue(
       text: txt,

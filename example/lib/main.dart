@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 22:49:40
- * @LastEditTime: 2022-08-01 14:25:06
+ * @LastEditTime: 2022-08-02 13:50:00
  * @Description: your project
  */
 import 'package:flutter/material.dart';
@@ -50,6 +50,12 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('是否输入'),
                   onPressed: () {
                     print('最后是否输入 ${controller.isInputModify}');
+                  },
+                ),
+                TextButton(
+                  child: const Text('更新值为 100'),
+                  onPressed: () {
+                    controller.modifyValue(100);
                   },
                 ),
                 SizedBox(
