@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-03 10:56:00
+ * @LastEditTime: 2022-08-03 11:03:09
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -517,10 +517,8 @@ class _TWStepCounterState extends State<TWStepCounter>
 
   /// 手动更新值
   void _modifyValue(double value) {
-    setState(() {
-      currentValue = value;
-      _updateTextFieldValue();
-    });
+    currentValue = value;
+    _updateTextFieldValue();
   }
 
   /// 更新值
