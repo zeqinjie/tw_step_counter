@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-02 14:10:01
+ * @LastEditTime: 2022-08-03 10:56:00
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -332,11 +332,14 @@ class _TWStepCounterState extends State<TWStepCounter>
           keyboardType:
               TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
           textInputAction: TextInputAction.done,
-          inputFormatters: widget.limitLength == null
-              ? null
-              : <TextInputFormatter>[
-                  LengthLimitingTextInputFormatter(widget.limitLength!) //限制长度
-                ],
+          inputFormatters: <TextInputFormatter>[
+            TWStepCounterFormatter(
+                decimals: widget.decimalsCount,
+                min: widget.mixValue,
+                max: widget.maxValue),
+            if (widget.limitLength != null)
+              LengthLimitingTextInputFormatter(widget.limitLength!) //限制长度
+          ],
           maxLines: 1,
           controller: textController,
           focusNode: focusNode,
@@ -551,5 +554,68 @@ class _TWStepCounterState extends State<TWStepCounter>
         ),
       ),
     );
+  }
+}
+
+class TWStepCounterFormatter extends TextInputFormatter {
+  TWStepCounterFormatter(
+      {required this.min, required this.max, required this.decimals});
+
+  final double min;
+  final double max;
+  final int decimals;
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final input = newValue.text;
+    if (input.isEmpty) {
+      return newValue;
+    }
+
+    final minus = input.startsWith('-');
+    if (minus && min >= 0) {
+      return oldValue;
+    }
+
+    final plus = input.startsWith('+');
+    if (plus && max < 0) {
+      return oldValue;
+    }
+
+    if ((minus || plus) && input.length == 1) {
+      return newValue;
+    }
+
+    if (decimals <= 0 && !_validateValue(int.tryParse(input))) {
+      return oldValue;
+    }
+
+    if (decimals > 0 && !_validateValue(double.tryParse(input))) {
+      return oldValue;
+    }
+
+    final dot = input.lastIndexOf('.');
+    if (dot >= 0 && decimals < input.substring(dot + 1).length) {
+      return oldValue;
+    }
+
+    return newValue;
+  }
+
+  bool _validateValue(num? value) {
+    if (value == null) {
+      return false;
+    }
+
+    if (value >= min && value <= max) {
+      return true;
+    }
+
+    if (value >= 0) {
+      return value <= max;
+    } else {
+      return value >= min;
+    }
   }
 }
