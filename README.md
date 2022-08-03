@@ -93,16 +93,16 @@ some support property
   /// 控制器
   final TWStepCounterController? controller;
 
-  /// 是否支持小数点
-  final bool? decimal;
-
   /// 是否自动限制值范围，默认会
   final bool isUpdateInLimitValue;
 
   /// 是否支持动画，默认会
   final bool isSupportAnimation;
 
-    /// 限制输入的长度
+  /// 是否输入时候更新
+  final bool isUpdateInputChange;
+
+  /// 限制输入的长度
   final int? limitLength;
   
 ```
