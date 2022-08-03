@@ -1,9 +1,12 @@
 <!--
  * @Author: zhengzeqin
  * @Date: 2022-07-18 11:14:42
- * @LastEditTime: 2022-08-01 14:33:26
+ * @LastEditTime: 2022-08-03 14:01:36
  * @Description: your project
 -->
+## 0.1.6
+- support for control updates on input
+- fix bug
 
 ## 0.1.5
 - support limit length

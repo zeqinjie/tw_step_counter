@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 22:49:40
- * @LastEditTime: 2022-08-03 11:42:34
+ * @LastEditTime: 2022-08-03 13:54:30
  * @Description: your project
  */
 import 'package:flutter/material.dart';
@@ -81,6 +81,7 @@ class _MyAppState extends State<MyApp> {
                     // isUpdateInLimitValue: false,
                     // isSupportAnimation: false,
                     decimalsCount: 2,
+                    isUpdateInputChange: false,
                     valuePadding: const EdgeInsets.only(
                       left: 10,
                       right: 10,
