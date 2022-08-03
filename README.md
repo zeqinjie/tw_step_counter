@@ -24,7 +24,7 @@ import 'package:tw_step_counter/tw_step_counter.dart';
 ## Getting Started
 some support property 
 ```dart
- /// 每次按钮点击递增递减值
+/// 每次按钮点击递增递减值
   final double differValue;
 
   /// 每次输入倍数，失去焦点时触发
@@ -69,6 +69,18 @@ some support property
   /// 默认颜色
   final Color? iconColor;
 
+  /// 加按钮图标，默认系统
+  final String? addIcon;
+
+  /// 减按钮图标，默认系统
+  final String? reduceIcon;
+
+  /// 禁止加按钮图标，默认系统
+  final String? addForbiddenIcon;
+
+  /// 禁止减按钮图标，默认系统
+  final String? reduceForbiddenIcon;
+
   /// 禁止点击颜色
   final Color? forbiddenIconColor;
 
@@ -110,30 +122,37 @@ example
 
 ```dart
 TWStepCounter(
-      unit: '元/天',
-      currentValue: 130,
-      mixValue: 75,
-      maxValue: 250,
-      onTap: (value) {
-        print('点击回调===>$value');
-      },
-      inputTap: (value) {
-        print('输入回调===>$value');
-      },
-      controller: controller,
-      defaultColor: TWColors.tw999999,
-      highlightColor: Colors.yellow,
-      borderLineColor: Colors.red,
-      inputMultipleValue: 5,
-      // height: 70,
-      // isUpdateInLimitValue: false,
-      // isSupportAnimation: false,
-      // decimal: true,
-      // decimalsCount: 2,
-      valuePadding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-      ),
-    )
+        unit: '元/天',
+        currentValue: 130,
+        mixValue: 75,
+        maxValue: 250,
+        onTap: (value) {
+          print('点击回调===>$value');
+        },
+        inputTap: (value) {
+          print('输入回调===>$value');
+        },
+        controller: controller,
+        addForbiddenIcon: 'assets/forbidden_add.png',
+        addIcon: 'assets/add.png',
+        reduceForbiddenIcon: 'assets/forbidden_reduce.png',
+        reduceIcon: 'assets/reduce.png',
+        defaultColor: TWColors.twF5F5F5,
+        highlightColor: Colors.yellow,
+        borderLineColor: Colors.red,
+        inputMultipleValue: 5,
+        // limitLength: 8,
+        // height: 70,
+        // isUpdateInLimitValue: false,
+        // isSupportAnimation: false,
+        decimalsCount: 2,
+        btnWidth: 64,
+        height: 30,
+        isUpdateInputChange: false,
+        valuePadding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+        ),
+      )
 ```
 

@@ -1,9 +1,13 @@
 <!--
  * @Author: zhengzeqin
  * @Date: 2022-07-18 11:14:42
- * @LastEditTime: 2022-08-03 14:01:36
+ * @LastEditTime: 2022-08-03 16:50:01
  * @Description: your project
 -->
+
+## 0.1.7
+- support custom icon
+
 ## 0.1.6
 - support for control updates on input
 - fix bug
