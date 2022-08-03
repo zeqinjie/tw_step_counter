@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-03 11:03:09
+ * @LastEditTime: 2022-08-03 13:50:44
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -110,14 +110,14 @@ class TWStepCounter extends StatefulWidget {
   /// 控制器
   final TWStepCounterController? controller;
 
-  /// 是否支持小数点
-  final bool? decimal;
-
   /// 是否自动限制值范围，默认会
   final bool isUpdateInLimitValue;
 
   /// 是否支持动画，默认会
   final bool isSupportAnimation;
+
+  /// 是否输入时候更新
+  final bool isUpdateInputChange;
 
   /// 限制输入的长度
   final int? limitLength;
@@ -148,9 +148,9 @@ class TWStepCounter extends StatefulWidget {
     this.borderLineColor,
     this.isUpdateInLimitValue = true,
     this.controller,
-    this.decimal = false,
     this.isSupportAnimation = true,
     this.limitLength,
+    this.isUpdateInputChange = true,
   }) : super(key: key);
 
   @override
@@ -329,8 +329,8 @@ class _TWStepCounterState extends State<TWStepCounter>
         alignment: Alignment.center,
         height: widget.height ?? 30,
         child: TextField(
-          keyboardType:
-              TextInputType.numberWithOptions(decimal: widget.decimal ?? false),
+          keyboardType: TextInputType.numberWithOptions(
+              decimal: widget.decimalsCount > 0),
           textInputAction: TextInputAction.done,
           inputFormatters: <TextInputFormatter>[
             TWStepCounterFormatter(
@@ -376,7 +376,9 @@ class _TWStepCounterState extends State<TWStepCounter>
             final double _value = _fetchValue(value);
             if (currentValue != _value) {
               currentValue = _value;
-              _updateValue(isInput: true);
+              if (widget.isUpdateInputChange) {
+                _updateValue(isInput: true);
+              }
               if (widget.inputTap != null) {
                 widget.inputTap!(currentValue);
               }
