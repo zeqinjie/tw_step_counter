@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 22:49:40
- * @LastEditTime: 2022-08-03 13:54:30
+ * @LastEditTime: 2022-08-03 16:14:10
  * @Description: your project
  */
 import 'package:flutter/material.dart';
@@ -72,7 +72,11 @@ class _MyAppState extends State<MyApp> {
                       print('输入回调===>$value');
                     },
                     controller: controller,
-                    defaultColor: TWColors.tw999999,
+                    addForbiddenIcon: 'assets/forbidden_add.png',
+                    addIcon: 'assets/add.png',
+                    reduceForbiddenIcon: 'assets/forbidden_reduce.png',
+                    reduceIcon: 'assets/reduce.png',
+                    defaultColor: TWColors.twF5F5F5,
                     highlightColor: Colors.yellow,
                     borderLineColor: Colors.red,
                     inputMultipleValue: 5,
@@ -81,6 +85,8 @@ class _MyAppState extends State<MyApp> {
                     // isUpdateInLimitValue: false,
                     // isSupportAnimation: false,
                     decimalsCount: 2,
+                    btnWidth: 64,
+                    height: 30,
                     isUpdateInputChange: false,
                     valuePadding: const EdgeInsets.only(
                       left: 10,

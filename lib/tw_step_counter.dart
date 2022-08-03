@@ -1,7 +1,7 @@
 /*
  * @Author: zhengzeqin
  * @Date: 2022-07-17 10:51:23
- * @LastEditTime: 2022-08-03 13:50:44
+ * @LastEditTime: 2022-08-03 16:14:21
  * @Description: 计数步进器封装
  */
 import 'package:flutter/material.dart';
@@ -86,6 +86,18 @@ class TWStepCounter extends StatefulWidget {
   /// 默认颜色
   final Color? iconColor;
 
+  /// 加按钮图标，默认系统
+  final String? addIcon;
+
+  /// 减按钮图标，默认系统
+  final String? reduceIcon;
+
+  /// 禁止加按钮图标，默认系统
+  final String? addForbiddenIcon;
+
+  /// 禁止减按钮图标，默认系统
+  final String? reduceForbiddenIcon;
+
   /// 禁止点击颜色
   final Color? forbiddenIconColor;
 
@@ -151,6 +163,10 @@ class TWStepCounter extends StatefulWidget {
     this.isSupportAnimation = true,
     this.limitLength,
     this.isUpdateInputChange = true,
+    this.addIcon,
+    this.reduceIcon,
+    this.addForbiddenIcon,
+    this.reduceForbiddenIcon,
   }) : super(key: key);
 
   @override
@@ -232,6 +248,8 @@ class _TWStepCounterState extends State<TWStepCounter>
             isAdd: false,
             onTap: _reduce,
             forbidden: forbiddenReduce,
+            icon: widget.reduceIcon,
+            forbiddenIcon: widget.reduceForbiddenIcon,
           ),
           Expanded(
               child: Padding(
@@ -241,6 +259,8 @@ class _TWStepCounterState extends State<TWStepCounter>
           _buildButton(
             onTap: _add,
             forbidden: forbiddenAdd,
+            icon: widget.addIcon,
+            forbiddenIcon: widget.addForbiddenIcon,
           ),
         ],
       ),
@@ -251,7 +271,23 @@ class _TWStepCounterState extends State<TWStepCounter>
     bool isAdd = true,
     GestureTapCallback? onTap,
     bool forbidden = false,
+    String? icon,
+    String? forbiddenIcon,
   }) {
+    Widget? iconWidget;
+    if (icon != null && forbiddenIcon != null) {
+      iconWidget = Image.asset(
+        forbidden ? forbiddenIcon : icon,
+      );
+    } else {
+      iconWidget = Icon(
+        isAdd ? Icons.add : Icons.remove,
+        size: 10,
+        color: forbidden
+            ? (widget.iconColor ?? TWColors.twCCCCCC)
+            : (widget.forbiddenIconColor ?? TWColors.tw4A4A4A),
+      );
+    }
     return Material(
       child: Ink(
         width: widget.btnWidth ?? 64,
@@ -263,13 +299,7 @@ class _TWStepCounterState extends State<TWStepCounter>
         child: InkWell(
           onTap: onTap,
           highlightColor: widget.highlightColor ?? TWColors.twE6E6E6,
-          child: Icon(
-            isAdd ? Icons.add : Icons.remove,
-            size: 10,
-            color: forbidden
-                ? (widget.iconColor ?? TWColors.twCCCCCC)
-                : (widget.forbiddenIconColor ?? TWColors.tw4A4A4A),
-          ),
+          child: iconWidget,
         ),
       ),
     );
