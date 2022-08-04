@@ -2,6 +2,8 @@
 
 This is a simple step caculator widget.
 
+pub：[tw_step_counter](https://pub.flutter-io.cn/packages/tw_step_counter)
+
 ## introduce
 
 ![](https://github.com/zeqinjie/tw_step_counter/blob/main/assets/1.gif)
